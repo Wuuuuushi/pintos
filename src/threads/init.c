@@ -128,12 +128,43 @@ pintos_init (void)
 #endif
 
   printf ("Boot complete.\n");
-  
   if (*argv != NULL) {
     /* Run actions specified on kernel command line. */
     run_actions (argv);
   } else {
-    // TODO: no command line passed to kernel. Run interactively 
+    
+    while (true) {
+      printf("ICS143A>");
+      char action[100];
+      int i = 0;
+      while(true){
+        char c[2];         // Declare a 2-character array for null-terminated storage
+        c[0] = input_getc();  // Read the character into the first element
+        c[1] = '\0';
+        if (c[0] == '\n' || c[0] == '\r'){
+          break;
+        }
+        printf(c);
+        action[i] = c[0];  // Read the first character
+        i++;
+      }
+      //Convert letter to lowercase
+      for (int i = 0; action[i] != '\0'; i++) {
+        if (action[i] >= 'A' &&action[i] <= 'Z') {
+            action[i] = action[i] + 32;  // Convert to lowercase by adding 32
+        }
+      }
+      action[i] = '\0';
+      printf("\n");
+    
+    if (strcmp(action, "exit") == 0) {
+        break;
+    } else if (strcmp(action, "whoami") == 0) {
+      printf("Rudy Xie\n");
+    } else {
+      printf("invalid command\n");
+    }
+    }
   }
 
   /* Finish up. */

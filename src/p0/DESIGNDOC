@@ -1,0 +1,46 @@
+			+-------------------------+
+			|      CompSci 143A       |
+			| PROJECT 0: Getting Real |
+			|     DESIGN DOCUMENT     |
+			+-------------------------+
+				   
+---- AUTHOR ----
+
+>> Fill in your name and email address.
+
+Rudy Xie <rudyx@uci.edu>
+
+---- PRELIMINARIES ----
+
+>> If you have any preliminary comments on your submission, or notes for the
+>> TAs, please give them here.
+
+>> Please cite any offline or online sources you consulted while
+>> preparing your submission, other than the Pintos documentation, course
+>> text, lecture notes, and course staff.
+
+			     Booting Pintos
+			     ==============
+
+---- QUESTIONS ---- 
+>> Put the screenshots of Pintos running in src/p0.
+>> A1: Is there any particular issue that you would like us to know?
+NO
+			     Kernel Monitor
+			     ==============
+
+---- DATA STRUCTURES ----
+
+>> C1: Copy here the declaration of each new or changed `struct' or
+>> `struct' member, global or static variable, `typedef', or
+>> enumeration.  Identify the purpose of each in 25 words or less.
+None
+---- ALGORITHMS ----
+>> C2: Explain how you read and write to the console for the kernel monitor.
+I used the input_getc function in devices/input.c to get the key pressed by the user. 
+Afterwards I put the characters into a char array incrementing by 1 to not overlap each other.
+If the input was not enter the program would continue to allow the user to type "letters".
+If the input was enter the program would lowercase all the letters and check to see if it was "whoami" or "exit".
+If it was "whoami" the program would return my name "Rudy Xie" other it would break out of the loop and end user inputs.
+>> C3: Any additional enhancement you implement?
+The only notable enchancement was the lowercasing of the letters so that the program would not have to check each different iterations of lower and uppercase letters.
