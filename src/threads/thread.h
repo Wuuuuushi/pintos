@@ -94,9 +94,13 @@ struct thread
     /* Shared between thread.c and synch.c. */
     struct list_elem elem;              /* List element. */
 
-    int base_priority;                  /* Used to record thread's priority when it's not being donated. */
     int64_t waketick;                /*Wake up tick used for waking up process*/
+    int original_priority;
+    int donated_priority;
+    struct list donated_list;
     struct list locks;                /*Keep track off all locks that are being used*/
+    struct lock *waiting_on_lock;
+    bool donating_priority;
 
 
 #ifdef USERPROG
@@ -147,4 +151,5 @@ int thread_get_load_avg (void);
 void thread_sleep(int64_t ticks);
 bool cmp_waketick(struct list_elem *first, struct list_elem *second, void *aux);
 bool cmp_priority(struct list_elem *first, struct list_elem *second, void *aux);
+void donate_priority(struct thread *lock, int priority);
 #endif /* threads/thread.h */
