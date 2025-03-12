@@ -202,8 +202,13 @@ thread_create (const char *name, int priority,
   sf->eip = switch_entry;
   sf->ebp = 0;
 
+
   /* Add to run queue. */
   thread_unblock (t);
+
+  if(thread_current()->priority < priority){
+    thread_yield();
+  }
 
   return tid;
 }
@@ -241,7 +246,7 @@ thread_unblock (struct thread *t)
 
   old_level = intr_disable ();
   ASSERT (t->status == THREAD_BLOCKED);
-  list_push_back (&ready_list, &t->elem);
+  list_insert_ordered(&ready_list, &t->elem, cmp_priority, NULL);
   t->status = THREAD_READY;
   intr_set_level (old_level);
 }
@@ -311,8 +316,9 @@ thread_yield (void)
   ASSERT (!intr_context ());
 
   old_level = intr_disable ();
-  if (cur != idle_thread) 
-    list_push_back (&ready_list, &cur->elem);
+  if (cur != idle_thread) {
+    list_insert_ordered(&ready_list, &cur->elem, cmp_priority, NULL);
+  }
   cur->status = THREAD_READY;
   schedule ();
   intr_set_level (old_level);
@@ -351,7 +357,7 @@ thread_set_priority (int new_priority)
   if (list_empty(&cur->locks) || new_priority > old_priority)
   {
     cur->priority = new_priority;
-	thread_yield();
+	  thread_yield();
   }
   intr_set_level(old_level);
 }
@@ -609,6 +615,18 @@ bool cmp_waketick(struct list_elem *first, struct list_elem *second, void *aux)
   return fthread->waketick < sthread->waketick;
 
 }
+
+//Compare priority to pass into list_insert_ordered
+bool cmp_priority(struct list_elem *first, struct list_elem *second, void *aux)
+  {
+    struct thread *fthread = list_entry (first, struct thread, elem);
+    struct thread *sthread = list_entry (second, struct thread, elem);
+
+    return fthread->priority > sthread->priority;
+
+  }
+
+
 
 
 
